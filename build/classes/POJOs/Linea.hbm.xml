@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-feb-2025 12:08:20 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="POJOs.Linea" table="linea" catalog="seguros" optimistic-lock="version">
+        <id name="codigo" type="int">
+            <column name="codigo" />
+            <generator class="assigned" />
+        </id>
+        <property name="descriptivo" type="string">
+            <column name="descriptivo" length="100" />
+        </property>
+        <property name="familia" type="string">
+            <column name="familia" length="1" />
+        </property>
+        <property name="fechaLimiteContratacion" type="date">
+            <column name="fechaLimiteContratacion" length="10" />
+        </property>
+        <set name="subvencions" table="subvencion" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="linea" not-null="true" />
+            </key>
+            <one-to-many class="POJOs.Subvencion" />
+        </set>
+        <set name="polizas" table="poliza" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="linea" not-null="true" />
+            </key>
+            <one-to-many class="POJOs.Poliza" />
+        </set>
+    </class>
+</hibernate-mapping>

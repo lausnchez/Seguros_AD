@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-feb-2025 12:08:20 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="POJOs.Subvencion" table="subvencion" catalog="seguros" optimistic-lock="version">
+        <composite-id name="id" class="POJOs.SubvencionId">
+            <key-property name="asegurado" type="int">
+                <column name="asegurado" />
+            </key-property>
+            <key-property name="linea" type="int">
+                <column name="linea" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="asegurado" class="POJOs.Asegurado" update="false" insert="false" fetch="select">
+            <column name="asegurado" not-null="true" />
+        </many-to-one>
+        <many-to-one name="linea" class="POJOs.Linea" update="false" insert="false" fetch="select">
+            <column name="linea" not-null="true" />
+        </many-to-one>
+        <property name="importe" type="java.lang.Short">
+            <column name="importe" precision="3" scale="0" />
+        </property>
+        <property name="asunto" type="string">
+            <column name="asunto" length="200" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

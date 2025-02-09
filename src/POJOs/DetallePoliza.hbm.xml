@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-feb-2025 12:08:20 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="POJOs.DetallePoliza" table="detalle_poliza" catalog="seguros" optimistic-lock="version">
+        <id name="referencia" type="string">
+            <column name="referencia" length="9" />
+            <generator class="foreign">
+                <param name="property">poliza</param>
+            </generator>
+        </id>
+        <one-to-one name="poliza" class="POJOs.Poliza" constrained="true"></one-to-one>
+        <property name="digitoControl" type="int">
+            <column name="digitoControl" not-null="true" />
+        </property>
+        <property name="fechaAlta" type="date">
+            <column name="fechaAlta" length="10" />
+        </property>
+        <property name="fechaVencimiento" type="date">
+            <column name="fechaVencimiento" length="10" />
+        </property>
+    </class>
+</hibernate-mapping>

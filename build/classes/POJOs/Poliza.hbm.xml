@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-feb-2025 12:08:20 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="POJOs.Poliza" table="poliza" catalog="seguros" optimistic-lock="version">
+        <id name="referencia" type="string">
+            <column name="referencia" length="9" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="asegurado" class="POJOs.Asegurado" fetch="select">
+            <column name="asegurado" not-null="true" />
+        </many-to-one>
+        <many-to-one name="linea" class="POJOs.Linea" fetch="select">
+            <column name="linea" not-null="true" />
+        </many-to-one>
+        <property name="digitoControl" type="int">
+            <column name="digitoControl" not-null="true" />
+        </property>
+        <property name="importe" type="big_decimal">
+            <column name="importe" precision="13" />
+        </property>
+        <one-to-one name="detallePoliza" class="POJOs.DetallePoliza"></one-to-one>
+    </class>
+</hibernate-mapping>
