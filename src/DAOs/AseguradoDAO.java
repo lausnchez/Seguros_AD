@@ -13,9 +13,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +31,7 @@ public class AseguradoDAO {
     private String fichero = "src/ficheros/Asegurados.txt";
     
     public void iniciarOperacion(){
-        this.sesion = HibernateUtil.getSessionFactory().getCurrentSession();
+        this.sesion = HibernateUtil.getSessionFactory().openSession();
         this.tx = sesion.beginTransaction();
     }
     
@@ -56,7 +53,7 @@ public class AseguradoDAO {
     +-----------------+-------------+------+-----+---------+----------------+   
     */
     
-    public void volcarFichero() throws IOException, ParseException{
+    public void volcarFichero(){
         File ficheroLineas = new File(fichero);
         FileReader fReader;
         
@@ -72,37 +69,44 @@ public class AseguradoDAO {
                 datos[2] = linea.substring(29,79);             // apellido1
                 datos[3] = linea.substring(79,129);            //apellido2
                 datos[4] = linea.substring(129);               //fecha
-                /*
+                
                 System.out.println("dni:" + datos[0]);
                 System.out.println("nombre:" + datos[1]);
                 System.out.println("apellido1:" + datos[2]);
                 System.out.println("apellido2:" + datos[3]);
                 System.out.println("fecha:" + datos[4]);
-                */
+                
                 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
                 Date fecha = format.parse(datos[4]);
                 
                 // String dni, String nombre, String apellido1, String apellido2, Date fechaNacimiento
-                Asegurado nuevoAsegurado = new Asegurado(datos[0], datos[1], datos[2], datos[3], fecha);
-                
+                Asegurado nuevoAsegurado = new Asegurado(datos[0], datos[1], datos[2], datos[3], fecha, null, null);             
                 try{
-                    iniciarOperacion();    
-                    sesion.save(nuevoAsegurado);
-                    System.out.println("Nuevo asegurado: " + nuevoAsegurado.getDni());
+                    iniciarOperacion();
+                    int id = (int)sesion.save(nuevoAsegurado);
+                    System.out.println("Nuevo asegurado: " + nuevoAsegurado.getDni() + "; ID: " + id);
                     tx.commit();
                 }catch(HibernateException he){
                     manejarExcepcion(he);
-                    throw he;
+                    System.out.println("Error:" + he.getMessage());
+                    throw he;   
+                }catch(Exception e){
+                    //manejarExcepcion(e);
+                    System.out.println("Error:" + e.getMessage());
+                    throw e;                   
                 }finally{
                     sesion.close();
                 }
             }
-
-            
             bReader.close();
             fReader.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LineaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AseguradoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(AseguradoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }   
     }
 }
