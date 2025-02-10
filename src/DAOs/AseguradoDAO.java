@@ -80,7 +80,8 @@ public class AseguradoDAO {
                 Date fecha = format.parse(datos[4]);
                 
                 // String dni, String nombre, String apellido1, String apellido2, Date fechaNacimiento
-                Asegurado nuevoAsegurado = new Asegurado(datos[0], datos[1], datos[2], datos[3], fecha, null, null);             
+                Asegurado nuevoAsegurado = new Asegurado(datos[0], datos[1], datos[2], datos[3], fecha, null, null);
+             
                 try{
                     iniciarOperacion();
                     int id = (int)sesion.save(nuevoAsegurado);
