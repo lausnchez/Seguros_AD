@@ -11,7 +11,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
@@ -29,7 +32,7 @@ public class LineaDAO {
     private String fichero = "src/ficheros/Lineas.txt";
     
     public void iniciarOperacion(){
-        this.sesion = HibernateUtil.getSessionFactory().getCurrentSession();
+        this.sesion = HibernateUtil.getSessionFactory().openSession();
         this.tx = sesion.beginTransaction();
     }
     
@@ -49,7 +52,7 @@ public class LineaDAO {
     +-------------------------+--------------+------+-----+---------+-------+
     */
     
-    public void volcarFichero() throws IOException{
+    public void volcarFichero() throws IOException, ParseException{
         File ficheroLineas = new File(fichero);
         FileReader fReader;
         
@@ -60,19 +63,47 @@ public class LineaDAO {
             
             while((linea = bReader.readLine()) != null){
                 String[] datos = new String[4];
-                datos[0] = linea.substring(0, 3);               // codigo
-                datos[1] = linea.substring(4,103).trim();       // descriptivo
-                datos[2] = linea.substring(102, 103);           // familia
-                datos[3] = linea.substring(104);                // fechaLimiteContratacion
+                datos[0] = linea.substring(0,3).trim();        // Codigo
+                datos[1] = linea.substring(3, 103).trim();     // descriptivo
+                datos[2] = linea.substring(103, 104).trim();    // familia
+                datos[3] = linea.substring(104).trim();         // fechaLimiteContratacion
                 
-                // int codigo, String descriptivo, String familia, Date fechaLimiteContratacion, Set subvencions, Set polizas
+                /*
+                System.out.println("Codigo: " + datos[0] + ". L: " + datos[0].length());
+                System.out.println("Descriptivo: " + datos[1] + ". L: " + datos[1].length());
+                System.out.println("Familia: " + datos[2] + ". L: " + datos[2].length());
+                System.out.println("Fecha: " + datos[3] + ". L: " + datos[3] + "\n");
+                */
+                
+               SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+               Date fecha = format.parse(datos[3]); 
+                
+               Linea nuevaLinea = new Linea(Integer.parseInt(datos[0]), datos[1], datos[2], fecha, null, null);
+                try{
+                    iniciarOperacion();
+                    int id = (int)sesion.save(nuevaLinea);
+                    System.out.println("Nueva línea: " + nuevaLinea.getCodigo());
+                    tx.commit();
+                }catch(HibernateException he){
+                    manejarExcepcion(he);
+                    System.out.println("Error:" + he.getMessage());
+                    throw he;   
+                }catch(Exception e){
+                    //manejarExcepcion(e);
+                    System.out.println("Error:" + e.getMessage());
+                    throw e;                   
+                }finally{
+                    sesion.close();
+                }
             }
-            
             bReader.close();
             fReader.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LineaDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+            System.out.println(ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AseguradoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
     
 }

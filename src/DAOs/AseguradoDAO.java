@@ -64,17 +64,20 @@ public class AseguradoDAO {
             
             while((linea = bReader.readLine()) != null){
                 String[] datos = new String[5];
-                datos[0] = linea.substring(0, 9);              // dni
-                datos[1] = linea.substring(9, 29);             // nombre, agregar espacios
-                datos[2] = linea.substring(29,79);             // apellido1
-                datos[3] = linea.substring(79,129);            //apellido2
-                datos[4] = linea.substring(129);               //fecha
+                datos[0] = linea.substring(0, 9).trim();              // dni
+                datos[1] = linea.substring(9, 29).trim();             // nombre, agregar espacios
+                datos[2] = linea.substring(29,79).trim();             // apellido1
+                datos[3] = linea.substring(79,129).trim();            //apellido2
+                datos[4] = linea.substring(129).trim();               //fecha
                 
+                
+                /*
                 System.out.println("dni:" + datos[0]);
                 System.out.println("nombre:" + datos[1]);
                 System.out.println("apellido1:" + datos[2]);
                 System.out.println("apellido2:" + datos[3]);
                 System.out.println("fecha:" + datos[4]);
+                */
                 
                 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
                 Date fecha = format.parse(datos[4]);
@@ -109,5 +112,12 @@ public class AseguradoDAO {
         } catch (ParseException ex) {
             Logger.getLogger(AseguradoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }   
+    }
+    
+    public Asegurado encontrarAsegurado(int id){
+        iniciarOperacion();
+        Asegurado aseguradoEncontrado = null;
+        aseguradoEncontrado = (Asegurado)sesion.createQuery("SELECT * FROM asegurados a WHERE id=:param").setInteger("param", id).uniqueResult();
+        return aseguradoEncontrado;
     }
 }

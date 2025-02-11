@@ -5,11 +5,15 @@
  */
 package DAOs;
 
+import POJOs.Subvencion;
+import POJOs.SubvencionId;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
@@ -56,18 +60,51 @@ public class SubvencionDAO {
             BufferedReader bReader = new BufferedReader(fReader);
             String linea = "";
             
-            while((linea = bReader.readLine()) != null){    // linea.length(116)
+            while((linea = bReader.readLine()) != null){
                 String[] datos = new String[4];
-                datos[0] = linea.substring(0, 12);               // asegurado
-                 System.out.println(linea.length());               
-                // SubvencionId id, Asegurado asegurado, Linea linea, String asunto
+                datos[0] = linea.substring(0, 10);  // Asegurado -ID
+                datos[1] = linea.substring(10, 13); // Linea -ID
+                datos[2] = linea.substring(13, 16); // Importe
+                datos[3] = linea.substring(16).trim();     // Asunto
+                
+                
+                System.out.println("Asegurado: " + datos[0] + ". L:" + datos[0].length());
+                System.out.println("Linea: " + datos[1] + ". L:" + datos[1].length());
+                System.out.println("Importe: " + datos[2] + ". L:" + datos[2].length());
+                System.out.println("Asunto: " + datos[3] + ". L:" + datos[3].length() + "\n");
+                
+                SubvencionId subID = new SubvencionId(Integer.parseInt(datos[0]), Integer.parseInt(datos[1]));
+                Subvencion nuevaSub = new Subvencion(
+                        Integer.parseInt(datos[0]),
+                        Integer.parseInt(datos[1]),
+                        asegurado,
+                        linea,
+                        Short.parseShort(datos[2]),
+                        datos[3]);
+                try{
+                    iniciarOperacion();
+                    //int id = (int)sesion.save(nuevaLinea);
+                    //System.out.println("Nueva línea: " + nuevaLinea.getCodigo());
+                    tx.commit();
+                }catch(HibernateException he){
+                    manejarExcepcion(he);
+                    System.out.println("Error:" + he.getMessage());
+                    throw he;   
+                }catch(Exception e){
+                    //manejarExcepcion(e);
+                    System.out.println("Error:" + e.getMessage());
+                    throw e;                   
+                }finally{
+                    sesion.close();
+                }
             }
-            
             bReader.close();
             fReader.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LineaDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }   
-    }
-    
+            System.out.println(ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AseguradoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }  
+    }   
 }
