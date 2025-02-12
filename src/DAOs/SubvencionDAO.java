@@ -5,6 +5,7 @@
  */
 package DAOs;
 
+import POJOs.Asegurado;
 import POJOs.Subvencion;
 import POJOs.SubvencionId;
 import java.io.BufferedReader;
@@ -31,7 +32,7 @@ public class SubvencionDAO {
     private String fichero = "src/ficheros/Subvenciones.txt";
     
     public void iniciarOperacion(){
-        this.sesion = HibernateUtil.getSessionFactory().getCurrentSession();
+        this.sesion = HibernateUtil.getSessionFactory().openSession();
         this.tx = sesion.beginTransaction();
     }
     
@@ -62,7 +63,7 @@ public class SubvencionDAO {
             
             while((linea = bReader.readLine()) != null){
                 String[] datos = new String[4];
-                datos[0] = linea.substring(0, 10);  // Asegurado -ID
+                datos[0] = linea.substring(0, 10).trim();  // Asegurado -ID
                 datos[1] = linea.substring(10, 13); // Linea -ID
                 datos[2] = linea.substring(13, 16); // Importe
                 datos[3] = linea.substring(16).trim();     // Asunto
@@ -73,11 +74,27 @@ public class SubvencionDAO {
                 System.out.println("Importe: " + datos[2] + ". L:" + datos[2].length());
                 System.out.println("Asunto: " + datos[3] + ". L:" + datos[3].length() + "\n");
                 
+                
                 SubvencionId subID = new SubvencionId(Integer.parseInt(datos[0]), Integer.parseInt(datos[1]));
+                
+                // Encontrar elementos del ID
+                AseguradoDAO asDAO = new AseguradoDAO();
+                LineaDAO lineaDAO = new LineaDAO();
+                Asegurado  aseguradoEncontrado = asDAO.encontrarAsegurado(Integer.parseInt(datos[0]));
+                Boolean valoresValidos = true;
+                
+                if(aseguradoEncontrado == null){
+                    System.out.println("Asegurado no encontrado");
+                    valoresValidos = false;
+                }else {
+                    System.out.println(aseguradoEncontrado.getNombre());
+                }
+                
+                /*
                 Subvencion nuevaSub = new Subvencion(
                         Integer.parseInt(datos[0]),
                         Integer.parseInt(datos[1]),
-                        asegurado,
+                        aseguradoEncontrado,
                         linea,
                         Short.parseShort(datos[2]),
                         datos[3]);
@@ -97,6 +114,7 @@ public class SubvencionDAO {
                 }finally{
                     sesion.close();
                 }
+                */
             }
             bReader.close();
             fReader.close();

@@ -26,13 +26,12 @@ public class SegurosHibernate {
         AseguradoDAO aseguradoDao = new AseguradoDAO();
         LineaDAO lineaDao = new LineaDAO();
         SubvencionDAO subDAO = new SubvencionDAO();
-        
+
         try {
             subDAO.volcarFichero();
         } catch (IOException ex) {
             Logger.getLogger(SegurosHibernate.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
     
 }

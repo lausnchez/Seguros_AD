@@ -117,7 +117,7 @@ public class AseguradoDAO {
     public Asegurado encontrarAsegurado(int id){
         iniciarOperacion();
         Asegurado aseguradoEncontrado = null;
-        aseguradoEncontrado = (Asegurado)sesion.createQuery("SELECT * FROM asegurados a WHERE id=:param").setInteger("param", id).uniqueResult();
+        aseguradoEncontrado = (Asegurado)sesion.createQuery("FROM Asegurado a WHERE id=:param").setInteger("param", id).uniqueResult();
         return aseguradoEncontrado;
     }
 }

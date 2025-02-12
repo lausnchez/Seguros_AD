@@ -106,4 +106,11 @@ public class LineaDAO {
         } 
     }
     
+    public Linea encontrarAsegurado(int codigo){
+        iniciarOperacion();
+        Linea aseguradoEncontrado = null;
+        aseguradoEncontrado = (Linea)sesion.createQuery("FROM Linea l WHERE id=:param").setInteger("param", codigo).uniqueResult();
+        return aseguradoEncontrado;
+    }
+    
 }
