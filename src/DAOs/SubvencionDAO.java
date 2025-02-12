@@ -6,6 +6,7 @@
 package DAOs;
 
 import POJOs.Asegurado;
+import POJOs.Linea;
 import POJOs.Subvencion;
 import POJOs.SubvencionId;
 import java.io.BufferedReader;
@@ -64,23 +65,22 @@ public class SubvencionDAO {
             while((linea = bReader.readLine()) != null){
                 String[] datos = new String[4];
                 datos[0] = linea.substring(0, 10).trim();  // Asegurado -ID
-                datos[1] = linea.substring(10, 13); // Linea -ID
+                datos[1] = linea.substring(10, 13).trim(); // Linea -ID
                 datos[2] = linea.substring(13, 16); // Importe
                 datos[3] = linea.substring(16).trim();     // Asunto
                 
-                
+                /*
                 System.out.println("Asegurado: " + datos[0] + ". L:" + datos[0].length());
                 System.out.println("Linea: " + datos[1] + ". L:" + datos[1].length());
                 System.out.println("Importe: " + datos[2] + ". L:" + datos[2].length());
                 System.out.println("Asunto: " + datos[3] + ". L:" + datos[3].length() + "\n");
-                
-                
-                SubvencionId subID = new SubvencionId(Integer.parseInt(datos[0]), Integer.parseInt(datos[1]));
-                
+                */
+
                 // Encontrar elementos del ID
                 AseguradoDAO asDAO = new AseguradoDAO();
                 LineaDAO lineaDAO = new LineaDAO();
                 Asegurado  aseguradoEncontrado = asDAO.encontrarAsegurado(Integer.parseInt(datos[0]));
+                Linea lineaEncontrada = lineaDAO.encontrarLinea(Integer.parseInt(datos[1]));
                 Boolean valoresValidos = true;
                 
                 if(aseguradoEncontrado == null){
@@ -90,39 +90,44 @@ public class SubvencionDAO {
                     System.out.println(aseguradoEncontrado.getNombre());
                 }
                 
-                /*
-                Subvencion nuevaSub = new Subvencion(
-                        Integer.parseInt(datos[0]),
-                        Integer.parseInt(datos[1]),
-                        aseguradoEncontrado,
-                        linea,
-                        Short.parseShort(datos[2]),
-                        datos[3]);
+                if(lineaEncontrada == null){
+                    System.out.println("Linea no encontrada");
+                    valoresValidos = false;
+                }
+                 
+                if(valoresValidos){
+                    System.out.println(aseguradoEncontrado.getId());
+                    // SubvencionId id, Asegurado asegurado, Linea linea, Short importe, String asunto
+                    /*
+                    SubvencionId subID = new SubvencionId(aseguradoEncontrado.getId(), lineaEncontrada.getCodigo());
+                    Subvencion nuevaSubvencion = new Subvencion(subID, aseguradoEncontrado, lineaEncontrada, Short.parseShort(datos[2]), datos[3]);
+                
                 try{
                     iniciarOperacion();
-                    //int id = (int)sesion.save(nuevaLinea);
-                    //System.out.println("Nueva línea: " + nuevaLinea.getCodigo());
-                    tx.commit();
-                }catch(HibernateException he){
-                    manejarExcepcion(he);
-                    System.out.println("Error:" + he.getMessage());
-                    throw he;   
-                }catch(Exception e){
-                    //manejarExcepcion(e);
-                    System.out.println("Error:" + e.getMessage());
-                    throw e;                   
-                }finally{
-                    sesion.close();
-                }
+                        sesion.save(nuevaSubvencion);
+                        System.out.println("Nueva subvención: " + nuevaSubvencion.getId());
+                        tx.commit();
+                    }catch(HibernateException he){
+                        manejarExcepcion(he);
+                        System.out.println("Error:" + he.getMessage());
+                        throw he;   
+                    }catch(Exception e){
+                        //manejarExcepcion(e);
+                        System.out.println("Error:" + e.getMessage());
+                        throw e;                   
+                    }finally{
+                        sesion.close();
+                    }
                 */
-            }
-            bReader.close();
-            fReader.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LineaDAO.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println(ex);
-        } catch (IOException ex) {
-            Logger.getLogger(AseguradoDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }  
+                }else System.out.println(aseguradoEncontrado.getId());  
+                }
+                    bReader.close();
+                    fReader.close();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(LineaDAO.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println(ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(AseguradoDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }          
     }   
 }
