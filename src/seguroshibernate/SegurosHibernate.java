@@ -93,6 +93,8 @@ public class SegurosHibernate {
             if(aseguradoContratacion == null){
                 System.out.println("No se ha encontrado un asegurado con ese ID");
             }else {
+                // 2. Se comprueba que el asegurado no tiene ninguna póliza para
+                // esa línea de seguro
                 
             }
         }
