@@ -7,13 +7,13 @@ package seguroshibernate;
 
 import DAOs.AseguradoDAO;
 import DAOs.LineaDAO;
+import DAOs.PolizaDAO;
 import DAOs.SubvencionDAO;
 import POJOs.Asegurado;
+import POJOs.Linea;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -70,17 +70,20 @@ public class SegurosHibernate {
                     System.out.println("Contrataciones ---");
                     contratacion();
                     break;
-            }
+            }      
         }
+        System.exit(0);
     }
     
     public static void contratacion(){
         Scanner scan = new Scanner(System.in);
         AseguradoDAO asegDAO = new AseguradoDAO();
+        LineaDAO lineaDAO = new LineaDAO();
+        PolizaDAO polizaDAO = new PolizaDAO();
         
-        // 1.0 Encontrar Asegurado
+        // 1.0 Encontrar Asegurado y línea de seguro válidos
         Asegurado aseguradoContratacion = null;
-        int idAsegurado = -1;
+        int idAsegurado;
         
         while(aseguradoContratacion == null){
             String linea = "a";
@@ -89,13 +92,45 @@ public class SegurosHibernate {
                 linea = scan.nextLine();
             }while(!Utils.comprobarNumero(linea));
             idAsegurado = Integer.parseInt(linea);
-            aseguradoContratacion = asegDAO.encontrarAsegurado(idAsegurado);
+            aseguradoContratacion = asegDAO.encontrarAsegurado(idAsegurado);    
             if(aseguradoContratacion == null){
                 System.out.println("No se ha encontrado un asegurado con ese ID");
             }else {
-                // 2. Se comprueba que el asegurado no tiene ninguna póliza para
-                // esa línea de seguro
+                System.out.println("Encontrado el asegurado con ID " + idAsegurado);
                 
+                // Encontrar linea de seguro
+                Linea lineaContratacion = null;
+                int idLinea = -1;
+
+                while(lineaContratacion == null){
+                    linea = "a";
+                    do{
+                        System.out.print("Inserte un código para encontrar la línea de seguro: ");
+                        linea = scan.nextLine();
+                    }while(!Utils.comprobarNumero(linea));
+                    idLinea = Integer.parseInt(linea);
+                    lineaContratacion = lineaDAO.encontrarLinea(idLinea);
+                    if(lineaContratacion != null){
+                        System.out.println("Encontrado la línea de seguro con código " + idLinea);
+                        
+                        /** 
+                        2. Se comprueba que el asegurado no tiene ninguna póliza para
+                        esa línea de seguro
+                        **/ 
+                        
+                        if(!polizaDAO.existePoliza(aseguradoContratacion, lineaContratacion)){
+                            /**
+                            Se comprueba que el límite de la fecha de contratación
+                            de la línea de seguro es mayor o igual que la fecha 
+                            actual, si no se devuelve un error
+                             **/ 
+                            if(lineaDAO.comprobarCaducidadLinea(lineaContratacion)){
+                                System.out.println("Linea de seguro sin caducar");
+                            }else System.out.println("Línea de seguro caducada");
+                        }else System.out.println("Ya existe una póliza con esa línea de seguro y asegurado.");
+                        
+                    }else System.out.println("No se ha encontrado la línea de seguro");
+                }
             }
         }
     }

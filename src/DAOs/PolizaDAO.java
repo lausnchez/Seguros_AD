@@ -5,6 +5,9 @@
  */
 package DAOs;
 
+import POJOs.Asegurado;
+import POJOs.Linea;
+import POJOs.Poliza;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -19,7 +22,7 @@ public class PolizaDAO {
     private Transaction tx;
     
     public void iniciarOperacion(){
-        this.sesion = HibernateUtil.getSessionFactory().getCurrentSession();
+        this.sesion = HibernateUtil.getSessionFactory().openSession();
         this.tx = sesion.beginTransaction();
     }
     
@@ -44,5 +47,35 @@ public class PolizaDAO {
     de condiciones específicas para contratar una póliza.
 
     */
+    
+    /**
+     * Busca una póliza con un asegurado y una línea en específico. En caso de
+     * no existir devolverá true y en caso negativo devolverá false.
+     * 
+     * @param asegurado
+     * @param linea
+     * @return 
+     */
+    public boolean existePoliza(Asegurado asegurado, Linea linea){
+        boolean polizaEncontrada = false;
+        Poliza poliza = null;
+        String query = "FROM Poliza p WHERE linea=:paramLinea AND asegurado=:paramAsegurado";
+        
+        try{
+            iniciarOperacion();
+            poliza = (Poliza)sesion.createQuery(query)
+                    .setInteger("paramLinea", linea.getCodigo())
+                    .setInteger("paramAsegurado", asegurado.getId())
+                    .uniqueResult();
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }
+        
+        if(poliza == null){ return false;}
+        else return true;
+    }
     
 }

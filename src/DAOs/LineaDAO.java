@@ -13,7 +13,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import static java.time.temporal.TemporalQueries.localDate;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,9 +110,21 @@ public class LineaDAO {
     
     public Linea encontrarLinea(int codigo){
         iniciarOperacion();
-        Linea aseguradoEncontrado = null;
-        aseguradoEncontrado = (Linea)sesion.createQuery("FROM Linea l WHERE id=:param").setInteger("param", codigo).uniqueResult();
-        return aseguradoEncontrado;
+        Linea lineaEncontrada = null;
+        lineaEncontrada = (Linea)sesion.createQuery("FROM Linea l WHERE id=:param").setInteger("param", codigo).uniqueResult();
+        return lineaEncontrada;
     }
-    
+   
+    /**
+     * Si la linea de seguro no está caducada, devuelve true.
+     * @param linea
+     * @return 
+     */
+    public boolean comprobarCaducidadLinea(Linea linea){
+        Date currentDate = new Date();   
+        if(linea.getFechaLimiteContratacion().after(currentDate) 
+                || linea.getFechaLimiteContratacion().equals(currentDate)){
+            return true;
+        }else return false;
+    }   
 }

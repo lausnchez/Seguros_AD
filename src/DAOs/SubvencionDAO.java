@@ -86,8 +86,6 @@ public class SubvencionDAO {
                 if(aseguradoEncontrado == null){
                     System.out.println("Asegurado no encontrado");
                     valoresValidos = false;
-                }else {
-                    System.out.println(aseguradoEncontrado.getNombre());
                 }
                 
                 if(lineaEncontrada == null){
@@ -96,16 +94,15 @@ public class SubvencionDAO {
                 }
                  
                 if(valoresValidos){
-                    System.out.println(aseguradoEncontrado.getId());
-                    // SubvencionId id, Asegurado asegurado, Linea linea, Short importe, String asunto
-                    /*
+                    // SubvencionId id, Asegurado asegurado, Linea linea, Short importe, String asunto 
                     SubvencionId subID = new SubvencionId(aseguradoEncontrado.getId(), lineaEncontrada.getCodigo());
-                    Subvencion nuevaSubvencion = new Subvencion(subID, aseguradoEncontrado, lineaEncontrada, Short.parseShort(datos[2]), datos[3]);
-                
+                    Subvencion nuevaSubvencion = new Subvencion(subID, aseguradoEncontrado, lineaEncontrada, Short.parseShort(datos[2]), datos[3]);       
                 try{
                     iniciarOperacion();
                         sesion.save(nuevaSubvencion);
-                        System.out.println("Nueva subvención: " + nuevaSubvencion.getId());
+                        System.out.println("Nueva subvención: " 
+                                + nuevaSubvencion.getAsegurado().getId() +
+                                "; Cod.: " + nuevaSubvencion.getLinea().getCodigo());
                         tx.commit();
                     }catch(HibernateException he){
                         manejarExcepcion(he);
@@ -118,7 +115,7 @@ public class SubvencionDAO {
                     }finally{
                         sesion.close();
                     }
-                */
+                
                 }else System.out.println(aseguradoEncontrado.getId());  
                 }
                     bReader.close();
@@ -130,4 +127,8 @@ public class SubvencionDAO {
                     Logger.getLogger(AseguradoDAO.class.getName()).log(Level.SEVERE, null, ex);
                 }          
     }   
+    
+    public void comprobarSubvencionPorLinea(){
+        
+    }
 }
