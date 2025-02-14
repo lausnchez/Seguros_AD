@@ -119,13 +119,16 @@ public class SegurosHibernate {
                         **/ 
                         
                         if(!polizaDAO.existePoliza(aseguradoContratacion, lineaContratacion)){
+                            
                             /**
-                            Se comprueba que el límite de la fecha de contratación
+                            3. Se comprueba que el límite de la fecha de contratación
                             de la línea de seguro es mayor o igual que la fecha 
                             actual, si no se devuelve un error
                              **/ 
+                            
                             if(lineaDAO.comprobarCaducidadLinea(lineaContratacion)){
                                 System.out.println("Linea de seguro sin caducar");
+                                
                             }else System.out.println("Línea de seguro caducada");
                         }else System.out.println("Ya existe una póliza con esa línea de seguro y asegurado.");
                         
