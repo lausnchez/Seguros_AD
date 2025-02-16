@@ -13,9 +13,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import static java.time.temporal.TemporalQueries.localDate;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +20,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import seguroshibernate.HibernateUtil;
+
+
 
 /**
  *
@@ -126,5 +125,5 @@ public class LineaDAO {
                 || linea.getFechaLimiteContratacion().equals(currentDate)){
             return true;
         }else return false;
-    }   
+    }
 }

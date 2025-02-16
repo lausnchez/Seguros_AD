@@ -6,12 +6,17 @@
 package DAOs;
 
 import POJOs.Asegurado;
+import POJOs.DetallePoliza;
 import POJOs.Linea;
 import POJOs.Poliza;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Scanner;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import seguroshibernate.HibernateUtil;
+import seguroshibernate.Utils;
 
 /**
  *
@@ -76,6 +81,101 @@ public class PolizaDAO {
         
         if(poliza == null){ return false;}
         else return true;
+    }
+    
+    
+    public float designarImportePoliza(){
+        // Se debe pedir un importe numérico y que sea mayor que 0
+        float importe;
+        Scanner scan = new Scanner(System.in);
+        Boolean valido = true;
+        String peticion;
+        
+        do{
+            valido = true;
+            System.out.print("Inserte un valor para el importe de la póliza: ");
+            peticion = scan.nextLine();
+            if(!Utils.comprobarFloat(peticion)){
+               valido = false; 
+                System.out.println("Debe insertar un número con decimales (usando una coma).");
+            }else{
+                if(Float.parseFloat(peticion) < 0){
+                    valido = false;
+                    System.out.println("Debe insertar un número positivo.");
+                }
+            }
+        }while(!valido);
+        System.out.println("Importe de póliza: " + peticion + "€");
+        return Float.parseFloat(peticion);
+    }
+    
+    public void generarPoliza(Asegurado asegurado, Linea linea, Float importePoliza){
+        String referencia = linea.getFamilia();
+    }
+
+    
+    public int encontrarMayorReferencia(String familia){
+        String resultado;
+        
+        try{
+           iniciarOperacion();
+           
+           String query = "SELECT MAX(SUBSTRING(referencia,2,8)) FROM Poliza p WHERE referencia LIKE :letra";
+           resultado = (String)sesion.createQuery(query).setString("letra", familia + '%').uniqueResult();
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }
+        if(resultado == null){ resultado = "0";}
+        return Integer.parseInt(resultado);
+    }
+    
+    public int generarDigitoDeControl(int referencia){
+        return referencia%6;
+    }
+    
+    public void crearPoliza(String referencia, Asegurado asegurado, Linea linea, int digitoControl, float importe ,Date alta, Date vencimiento){
+        DetallePolizaDAO detalleDAO = new DetallePolizaDAO();
+        
+        Poliza nuevaPoliza = new Poliza(referencia, asegurado, linea, digitoControl);
+        Boolean polizaCreada;
+        try{
+            iniciarOperacion();
+            sesion.save(nuevaPoliza);
+            tx.commit();
+            polizaCreada = true;
+            System.out.println("Póliza creada con éxito. Procede a crear el detalle de la póliza y el importe.");
+        }catch(HibernateException he){
+            System.out.println("Error al crear la póliza base");
+            manejarExcepcion(he);
+            polizaCreada = false;
+            throw he;
+        }finally{
+            sesion.close();
+        }
+        
+        // En caso de que se haya creado la póliza sin problemas se crea el detalle
+        if(polizaCreada){
+            DetallePoliza detallePoliza = detalleDAO.generarDetallePoliza(referencia, nuevaPoliza, digitoControl, alta, vencimiento);
+            nuevaPoliza.setDetallePoliza(detallePoliza);
+            nuevaPoliza.setImporte(BigDecimal.valueOf(Double.parseDouble(String.valueOf(importe))));
+            
+            try{
+                iniciarOperacion();
+                sesion.update(nuevaPoliza);
+                tx.commit();
+                System.out.println("Importe y detalles asignados a la póliza.");
+                System.out.println("Póliza " + nuevaPoliza.getReferencia() + " creada.");
+            }catch(HibernateException he){
+                manejarExcepcion(he);
+                throw he;
+            }finally{
+                sesion.close();
+            }
+            
+        }
     }
     
 }

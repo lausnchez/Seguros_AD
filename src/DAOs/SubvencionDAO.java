@@ -14,8 +14,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
@@ -128,7 +126,25 @@ public class SubvencionDAO {
                 }          
     }   
     
-    public void comprobarSubvencionPorLinea(){
+    public float comprobarExistenciaSubvencion(Asegurado asegurado, Linea linea){   
+        Subvencion subvencion = null;
+        try{
+            iniciarOperacion();
+            String query = "FROM Subvencion s WHERE asegurado =:paramAsegurado AND linea=:paramLinea";
+            subvencion = (Subvencion)sesion.createQuery(query)
+                    .setInteger("paramAsegurado", asegurado.getId())
+                    .setInteger("paramLinea", linea.getCodigo())
+                    .uniqueResult();
+            
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }
         
+        if(subvencion == null){
+            return 0;
+        }else return subvencion.getImporte();
     }
 }

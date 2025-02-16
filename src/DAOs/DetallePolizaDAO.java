@@ -5,10 +5,15 @@
  */
 package DAOs;
 
+import POJOs.DetallePoliza;
+import POJOs.Poliza;
+import java.util.Date;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import seguroshibernate.HibernateUtil;
+
+
 
 /**
  *
@@ -19,7 +24,7 @@ public class DetallePolizaDAO {
     private Transaction tx;
     
     public void iniciarOperacion(){
-        this.sesion = HibernateUtil.getSessionFactory().getCurrentSession();
+        this.sesion = HibernateUtil.getSessionFactory().openSession();
         this.tx = sesion.beginTransaction();
     }
     
@@ -39,5 +44,22 @@ public class DetallePolizaDAO {
     +------------------+------------+------+-----+---------+-------+
     */
     
-    
+    public DetallePoliza generarDetallePoliza(String referencia, Poliza poliza, int digitoControl, Date alta, Date vencimiento){
+        DetallePoliza detalle = new DetallePoliza(referencia, poliza, digitoControl, alta, vencimiento);
+        try{
+            iniciarOperacion();
+            sesion.save(detalle);
+            tx.commit();
+            System.out.println("Detalle creado con éxito.");
+            return detalle;
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            System.err.println(he);
+            System.out.println("Error creando el detalle de la póliza");
+            return null;
+        }finally{
+            sesion.close();
+        }
+        
+    }
 }

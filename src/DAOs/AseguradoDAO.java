@@ -21,6 +21,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import seguroshibernate.HibernateUtil;
 
+
+
+
+
 /**
  *
  * @author Laura Sánchez

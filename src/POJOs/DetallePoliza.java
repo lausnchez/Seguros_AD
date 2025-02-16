@@ -30,6 +30,14 @@ public class DetallePoliza  implements java.io.Serializable {
        this.fechaAlta = fechaAlta;
        this.fechaVencimiento = fechaVencimiento;
     }
+    
+    public DetallePoliza(String referencia, Poliza poliza, int digitoControl, Date fechaAlta, Date fechaVencimiento) {
+       this.referencia = referencia;
+       this.poliza = poliza;
+       this.digitoControl = digitoControl;
+       this.fechaAlta = fechaAlta;
+       this.fechaVencimiento = fechaVencimiento;
+    }
    
     public String getReferencia() {
         return this.referencia;

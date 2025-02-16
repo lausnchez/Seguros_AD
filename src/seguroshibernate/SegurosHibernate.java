@@ -6,6 +6,7 @@
 package seguroshibernate;
 
 import DAOs.AseguradoDAO;
+import DAOs.DetallePolizaDAO;
 import DAOs.LineaDAO;
 import DAOs.PolizaDAO;
 import DAOs.SubvencionDAO;
@@ -13,7 +14,11 @@ import POJOs.Asegurado;
 import POJOs.Linea;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
+
+
 
 /**
  *
@@ -43,7 +48,7 @@ public class SegurosHibernate {
             System.out.println("0. Salir");
 
             String valor = scan.nextLine();
-            if(Utils.comprobarNumero(valor)){
+            if(Utils.comprobarInt(valor)){
                 opcion = Integer.parseInt(valor);
             }else opcion = -1;
             
@@ -80,6 +85,7 @@ public class SegurosHibernate {
         AseguradoDAO asegDAO = new AseguradoDAO();
         LineaDAO lineaDAO = new LineaDAO();
         PolizaDAO polizaDAO = new PolizaDAO();
+        SubvencionDAO subDAO = new SubvencionDAO();
         
         // 1.0 Encontrar Asegurado y línea de seguro válidos
         Asegurado aseguradoContratacion = null;
@@ -90,7 +96,7 @@ public class SegurosHibernate {
             do{
                 System.out.print("Inserte un ID para encontrar al asegurado: ");
                 linea = scan.nextLine();
-            }while(!Utils.comprobarNumero(linea));
+            }while(!Utils.comprobarInt(linea));
             idAsegurado = Integer.parseInt(linea);
             aseguradoContratacion = asegDAO.encontrarAsegurado(idAsegurado);    
             if(aseguradoContratacion == null){
@@ -107,7 +113,7 @@ public class SegurosHibernate {
                     do{
                         System.out.print("Inserte un código para encontrar la línea de seguro: ");
                         linea = scan.nextLine();
-                    }while(!Utils.comprobarNumero(linea));
+                    }while(!Utils.comprobarInt(linea));
                     idLinea = Integer.parseInt(linea);
                     lineaContratacion = lineaDAO.encontrarLinea(idLinea);
                     if(lineaContratacion != null){
@@ -128,6 +134,41 @@ public class SegurosHibernate {
                             
                             if(lineaDAO.comprobarCaducidadLinea(lineaContratacion)){
                                 System.out.println("Linea de seguro sin caducar");
+                                
+                                // 4. Se pide un importe numérico y mayor de 0
+                                float importePoliza = polizaDAO.designarImportePoliza();
+                                
+                                /*
+                                5. Se comprueba si el usuario tiene una subvención para la línea de seguro que se desea contratar, si
+                                es así se resta al importe de la póliza el porcentaje correspondiente a la subvención
+                                */
+                                
+                                float importeSubvencion = subDAO.comprobarExistenciaSubvencion(aseguradoContratacion, lineaContratacion);
+                                System.out.println("Porcentaje de deducción de la póliza: " + importeSubvencion + "%");
+                                float importeFinalPoliza = (float) (importePoliza - (importePoliza * (importeSubvencion * 0.01)));
+                                System.out.println("Importe final de la póliza: " + importeFinalPoliza + "€");
+                                
+                                // 6. Se genera la póliza en la base de datos
+                                int numReferencia = polizaDAO.encontrarMayorReferencia(lineaContratacion.getFamilia()) + 1;
+                                String referencia = lineaContratacion.getFamilia() + numReferencia;
+                                
+                                System.out.println("Referencia: " + referencia);
+                                
+                                // digito de control -> resto de referencia entre 6
+                                int digitoControl = polizaDAO.generarDigitoDeControl(numReferencia);
+                                System.out.println("Número de control: " + digitoControl);
+                                
+                                // Calcular fecha de vencimiento para el detalle_poliza
+                                Date fechaActual = new Date();
+                                System.out.println("Fecha actual: " + fechaActual);
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTime(fechaActual);
+                                calendar.add(Calendar.YEAR, 1);
+                                Date fechaVencimiento = calendar.getTime();
+                                System.out.println("Fecha de vencimiento: " + fechaVencimiento);
+                                
+                                // Crear póliza y detalle de la póliza
+                                polizaDAO.crearPoliza(referencia, aseguradoContratacion, lineaContratacion, digitoControl, importePoliza, fechaActual, fechaVencimiento);
                                 
                             }else System.out.println("Línea de seguro caducada");
                         }else System.out.println("Ya existe una póliza con esa línea de seguro y asegurado.");

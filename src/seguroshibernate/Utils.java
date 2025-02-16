@@ -10,9 +10,18 @@ package seguroshibernate;
  * @author Laura Sánchez
  */
 public class Utils {
-    public static boolean comprobarNumero(String valor){
+    public static boolean comprobarInt(String valor){
         try{
             Integer.parseInt(valor);
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    }
+    
+    public static boolean comprobarFloat(String valor){
+        try{
+            Float.parseFloat(valor);
             return true;
         }catch(Exception e){
             return false;
