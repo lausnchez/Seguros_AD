@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
@@ -146,5 +147,38 @@ public class SubvencionDAO {
         if(subvencion == null){
             return 0;
         }else return subvencion.getImporte();
+    }
+    
+    public List<Subvencion> recogerSubvencionesDeUsuario(Asegurado asegurado){
+        List<Subvencion> subvencionesUsuario = null;
+        try{
+            iniciarOperacion();
+            String query = "FROM Subvencion s WHERE asegurado =:asegurado";
+            subvencionesUsuario = sesion.createQuery(query).setInteger("asegurado", asegurado.getId()).list();
+            if(subvencionesUsuario != null){
+                System.out.println("\nSe han encontrado " + subvencionesUsuario.size() + " subvenciones del usuario " + asegurado.getId());
+            }else System.out.println("\nNo se han encontrado subvenciones.");
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }
+        
+        return subvencionesUsuario;
+    }
+    
+    public void mostrarVariasSubvenciones(List<Subvencion> subvencionesUsuario){
+        for(Subvencion sub: subvencionesUsuario){
+                    mostrarSubvencion(sub);
+                }
+    }
+    
+    public void mostrarSubvencion(Subvencion subvencion){
+        System.out.println("----------------------------------------------------");
+        System.out.println("ID del Asegurado: " + subvencion.getAsegurado().getId());
+        System.out.println("Linea de seguro: " + subvencion.getLinea().getCodigo());
+        System.out.println("Importe: " + subvencion.getImporte());
+        System.out.println("Asunto: " + subvencion.getAsunto());
     }
 }

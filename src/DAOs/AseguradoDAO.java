@@ -14,12 +14,14 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import seguroshibernate.HibernateUtil;
+import seguroshibernate.Utils;
 
 
 
@@ -118,10 +120,52 @@ public class AseguradoDAO {
         }   
     }
     
+    /**
+     * Encuentra un asegurado en la base de datos. Puede devolver null.
+     * @param id
+     * @return Asegurado / null;
+     */
     public Asegurado encontrarAsegurado(int id){
         iniciarOperacion();
         Asegurado aseguradoEncontrado = null;
         aseguradoEncontrado = (Asegurado)sesion.createQuery("FROM Asegurado a WHERE id=:param").setInteger("param", id).uniqueResult();
         return aseguradoEncontrado;
+    }
+    
+    /**
+     * Pide un ID al usuario hasta que encuentra el asegurado en la base de datos
+     * @return Asegurado.
+     */
+    public Asegurado pedirAsegurado(){
+        AseguradoDAO aseguradoDAO = new AseguradoDAO();
+        Scanner scan = new Scanner(System.in);
+        
+        Asegurado asegurado = null;
+        do{
+            System.out.print("Inserte el ID del asegurado que quiere encontrar: ");
+            String respuestaUsuario = scan.nextLine();
+            if(Utils.comprobarInt(respuestaUsuario)){
+                asegurado = aseguradoDAO.encontrarAsegurado(Integer.parseInt(respuestaUsuario));
+                if(asegurado == null){
+                    System.out.println("Asegurado no encontrado en la base de datos");
+                }else{
+                    System.out.println("Encontrado asegurado con ID " + asegurado.getId());
+                }
+            }else{
+                System.out.println("Valor no válido. Inserte un id numérico.");
+            }
+        }while(asegurado == null);
+        return asegurado;
+    }
+    
+    public void mostrarDatosAsegurado(Asegurado asegurado){
+        System.out.println("\n...............................");
+        System.out.println("Datos del asegurado: ");
+        System.out.println("...............................");
+        System.out.println("ID: " + asegurado.getId());
+        System.out.println("DNI: " + asegurado.getDni());
+        System.out.println("Nombre: " + asegurado.getNombre());
+        System.out.println("Apellidos: " + asegurado.getApellido1() + " " + asegurado.getApellido2());
+        System.out.println("Fecha de nacimiento: " + asegurado.getFechaNacimiento());
     }
 }

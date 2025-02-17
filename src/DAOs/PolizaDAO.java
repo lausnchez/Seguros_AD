@@ -11,6 +11,7 @@ import POJOs.Linea;
 import POJOs.Poliza;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -176,6 +177,47 @@ public class PolizaDAO {
             }
             
         }
+    }
+    
+    public List<Poliza> recogerPolizasDeUsuario(Asegurado asegurado){
+        List<Poliza> polizasUsuario = null;
+        try{
+            iniciarOperacion();
+            String query = "FROM Poliza p WHERE asegurado =:asegurado";
+            polizasUsuario = sesion.createQuery(query).setInteger("asegurado", asegurado.getId()).list();
+            if(polizasUsuario != null){
+                System.out.println("\nSe han encontrado " + polizasUsuario.size() + " pólizas del usuario " + asegurado.getId());
+            }else System.out.println("\nNo se han encontrado pólizas.");
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }
+        
+        return polizasUsuario;
+    }
+    
+    public void mostrarVariasPolizas(List<Poliza> subvencionesUsuario){
+        for(Poliza pol: subvencionesUsuario){
+                    mostrarPoliza(pol);
+                }
+    }
+    
+    public void mostrarPoliza(Poliza poliza){
+        System.out.println("----------------------------------------------------");
+        System.out.println("Referencia: " + poliza.getReferencia());
+        System.out.println("Digito de control: " + poliza.getDigitoControl());
+        System.out.println("Asegurado: " + poliza.getAsegurado().getId());
+        System.out.println("Linea de seguro: " + poliza.getLinea().getCodigo());
+        System.out.println("Importe: " + poliza.getImporte());
+        
+        System.out.println("\nDetalles de la póliza: ");
+        System.out.println("Referencia: " + poliza.getDetallePoliza().getReferencia());
+        System.out.println("Dígito de control: " + poliza.getDetallePoliza().getDigitoControl());
+        System.out.println("Fecha de Alta: " + poliza.getDetallePoliza().getFechaAlta());
+        System.out.println("Fecha de Vencimiento: " + poliza.getDetallePoliza().getFechaVencimiento());
+        
     }
     
 }

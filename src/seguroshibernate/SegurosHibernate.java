@@ -6,16 +6,18 @@
 package seguroshibernate;
 
 import DAOs.AseguradoDAO;
-import DAOs.DetallePolizaDAO;
 import DAOs.LineaDAO;
 import DAOs.PolizaDAO;
 import DAOs.SubvencionDAO;
 import POJOs.Asegurado;
 import POJOs.Linea;
+import POJOs.Poliza;
+import POJOs.Subvencion;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -45,7 +47,9 @@ public class SegurosHibernate {
             System.out.println("------------------------------------------------");
             System.out.println("1. Volcar ficheros en la base de datos");
             System.out.println("2. Contratar póliza");
+            System.out.println("3. Mostrar datos de un asegurado");
             System.out.println("0. Salir");
+            System.out.print("\nOpcion: ");
 
             String valor = scan.nextLine();
             if(Utils.comprobarInt(valor)){
@@ -74,6 +78,9 @@ public class SegurosHibernate {
                 case 2:
                     System.out.println("Contrataciones ---");
                     contratacion();
+                    break;
+                case 3: 
+                    encontrarAsegurado();
                     break;
             }      
         }
@@ -179,4 +186,21 @@ public class SegurosHibernate {
         }
     }
     
+    public static void encontrarAsegurado(){
+        AseguradoDAO aseguradoDAO = new AseguradoDAO();
+        SubvencionDAO subvencionDAO = new SubvencionDAO();
+        PolizaDAO polizaDAO = new PolizaDAO();
+        
+        Asegurado aseguradoEncontrado = aseguradoDAO.pedirAsegurado();
+        aseguradoDAO.mostrarDatosAsegurado(aseguradoEncontrado);
+        List<Subvencion> listadoSubvenciones = subvencionDAO.recogerSubvencionesDeUsuario(aseguradoEncontrado);
+        if(listadoSubvenciones != null){
+            subvencionDAO.mostrarVariasSubvenciones(listadoSubvenciones);
+        }
+        List<Poliza> listadoPolizas = polizaDAO.recogerPolizasDeUsuario(aseguradoEncontrado);
+        if(listadoPolizas != null){
+            polizaDAO.mostrarVariasPolizas(listadoPolizas);
+        }
+        
+    }  
 }
