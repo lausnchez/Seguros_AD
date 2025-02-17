@@ -212,11 +212,11 @@ public class PolizaDAO {
         System.out.println("Linea de seguro: " + poliza.getLinea().getCodigo());
         System.out.println("Importe: " + poliza.getImporte());
         
-        System.out.println("\nDetalles de la póliza: ");
-        System.out.println("Referencia: " + poliza.getDetallePoliza().getReferencia());
-        System.out.println("Dígito de control: " + poliza.getDetallePoliza().getDigitoControl());
-        System.out.println("Fecha de Alta: " + poliza.getDetallePoliza().getFechaAlta());
-        System.out.println("Fecha de Vencimiento: " + poliza.getDetallePoliza().getFechaVencimiento());
+        System.out.println("\n - Detalles de la póliza: ");
+        System.out.println("    Referencia: " + poliza.getDetallePoliza().getReferencia());
+        System.out.println("    Dígito de control: " + poliza.getDetallePoliza().getDigitoControl());
+        System.out.println("    Fecha de Alta: " + poliza.getDetallePoliza().getFechaAlta());
+        System.out.println("    Fecha de Vencimiento: " + poliza.getDetallePoliza().getFechaVencimiento());
         
     }
     

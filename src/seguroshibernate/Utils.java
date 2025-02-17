@@ -5,6 +5,8 @@
  */
 package seguroshibernate;
 
+import java.util.Scanner;
+
 /**
  *
  * @author Laura Sánchez
@@ -25,6 +27,26 @@ public class Utils {
             return true;
         }catch(Exception e){
             return false;
+        }
+    }
+    
+    public static boolean pedirConfirmacion(String pregunta){
+        Scanner scan = new Scanner(System.in);
+        
+        while(true){
+            System.out.println("\n" + pregunta);
+            System.out.println("Opcion 1: Confirmar");
+            System.out.println("Opcion 2: Cancelar");
+            String respuesta = scan.nextLine();
+            switch(respuesta){
+                case "1":
+                    return true;
+                case "2":
+                    return false;
+                default:
+                    System.out.println("Valor no válido\n");
+                    break;
+            }
         }
     }
 }

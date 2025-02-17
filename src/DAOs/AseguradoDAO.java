@@ -168,4 +168,12 @@ public class AseguradoDAO {
         System.out.println("Apellidos: " + asegurado.getApellido1() + " " + asegurado.getApellido2());
         System.out.println("Fecha de nacimiento: " + asegurado.getFechaNacimiento());
     }
+    
+    public void borrarAsegurado(Asegurado asegurado){
+        // Borrar subvenciones
+        
+        // Borrar polizas
+        
+        // Borrar asegurado
+    }
 }

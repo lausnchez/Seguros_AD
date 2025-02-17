@@ -181,4 +181,11 @@ public class SubvencionDAO {
         System.out.println("Importe: " + subvencion.getImporte());
         System.out.println("Asunto: " + subvencion.getAsunto());
     }
+    
+    public void borrarSubvenciones(Asegurado asegurado){
+        List<Subvencion> subvencionesUsuario = recogerSubvencionesDeUsuario(asegurado);
+        for(Subvencion sub: subvencionesUsuario){
+            
+        }
+    }
 }

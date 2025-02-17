@@ -48,6 +48,7 @@ public class SegurosHibernate {
             System.out.println("1. Volcar ficheros en la base de datos");
             System.out.println("2. Contratar póliza");
             System.out.println("3. Mostrar datos de un asegurado");
+            System.out.println("4. Borrar asegurado");
             System.out.println("0. Salir");
             System.out.print("\nOpcion: ");
 
@@ -81,6 +82,9 @@ public class SegurosHibernate {
                     break;
                 case 3: 
                     encontrarAsegurado();
+                    break;
+                case 4:
+                    borrarAsegurado();
                     break;
             }      
         }
@@ -186,7 +190,7 @@ public class SegurosHibernate {
         }
     }
     
-    public static void encontrarAsegurado(){
+    public static Asegurado encontrarAsegurado(){
         AseguradoDAO aseguradoDAO = new AseguradoDAO();
         SubvencionDAO subvencionDAO = new SubvencionDAO();
         PolizaDAO polizaDAO = new PolizaDAO();
@@ -200,7 +204,18 @@ public class SegurosHibernate {
         List<Poliza> listadoPolizas = polizaDAO.recogerPolizasDeUsuario(aseguradoEncontrado);
         if(listadoPolizas != null){
             polizaDAO.mostrarVariasPolizas(listadoPolizas);
+        }  
+        return aseguradoEncontrado;
+    }  
+    
+    public static void borrarAsegurado(){
+        AseguradoDAO aseguradoDAO = new AseguradoDAO();
+        
+        Asegurado asegurado = encontrarAsegurado();
+        Boolean confirmacion = Utils.pedirConfirmacion("¿Desea borrar al usuario?");
+        if(confirmacion){
+            aseguradoDAO.borrarAsegurado(asegurado);
         }
         
-    }  
+    }
 }
