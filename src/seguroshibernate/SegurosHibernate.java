@@ -86,6 +86,10 @@ public class SegurosHibernate {
                 case 4:
                     borrarAsegurado();
                     break;
+                case 5:
+                    AseguradoDAO asDAO = new AseguradoDAO();
+                    asDAO.generarXML_Asegurados();
+                    break;
             }      
         }
         System.exit(0);
@@ -214,8 +218,7 @@ public class SegurosHibernate {
         Asegurado asegurado = encontrarAsegurado();
         Boolean confirmacion = Utils.pedirConfirmacion("¿Desea borrar al usuario?");
         if(confirmacion){
-            aseguradoDAO.borrarAsegurado(asegurado);
-        }
-        
+            aseguradoDAO.borrarDatosAsegurado(asegurado);
+        }      
     }
 }

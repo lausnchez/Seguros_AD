@@ -59,7 +59,38 @@ public class DetallePolizaDAO {
             return null;
         }finally{
             sesion.close();
+        }  
+    }
+    
+    public DetallePoliza buscarDetallePoliza(Poliza poliza){
+        DetallePoliza resultado = null;
+        String query = "FROM DetallePoliza dp WHERE referencia=:refPoliza";
+        try{
+            iniciarOperacion();
+            resultado = (DetallePoliza)sesion.createQuery(query).setString("refPoliza", poliza.getReferencia()).uniqueResult();
+            if(resultado == null){
+                System.out.println("No se encontraron resultados.");
+            }
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
         }
-        
+        return resultado;
+    }
+    
+    public void borrarDetallePoliza(DetallePoliza detalle){
+        try{
+            iniciarOperacion();
+            sesion.delete(detalle);
+            tx.commit();
+            System.out.println("Detalle de póliza " + detalle.getReferencia() + " eliminada.");
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }
     }
 }

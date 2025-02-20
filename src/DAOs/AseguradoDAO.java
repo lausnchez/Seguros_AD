@@ -37,8 +37,8 @@ public class AseguradoDAO {
     private String fichero = "src/ficheros/Asegurados.txt";
     
     public void iniciarOperacion(){
-        this.sesion = HibernateUtil.getSessionFactory().openSession();
-        this.tx = sesion.beginTransaction();
+            this.sesion = HibernateUtil.getSessionFactory().openSession();
+            this.tx = sesion.beginTransaction();    
     }
     
     public void manejarExcepcion(HibernateException he){
@@ -149,7 +149,7 @@ public class AseguradoDAO {
                 if(asegurado == null){
                     System.out.println("Asegurado no encontrado en la base de datos");
                 }else{
-                    System.out.println("Encontrado asegurado con ID " + asegurado.getId());
+                    System.out.println("\nEncontrado asegurado con ID " + asegurado.getId());
                 }
             }else{
                 System.out.println("Valor no válido. Inserte un id numérico.");
@@ -169,11 +169,36 @@ public class AseguradoDAO {
         System.out.println("Fecha de nacimiento: " + asegurado.getFechaNacimiento());
     }
     
-    public void borrarAsegurado(Asegurado asegurado){
+    public void borrarDatosAsegurado(Asegurado asegurado){
+        SubvencionDAO subvencionesDAO = new SubvencionDAO();
+        PolizaDAO polizaDAO = new PolizaDAO();
+        
         // Borrar subvenciones
-        
+        subvencionesDAO.borrarSubvenciones(asegurado);
         // Borrar polizas
-        
+        polizaDAO.borrarPolizasAsegurado(asegurado);
         // Borrar asegurado
+        //borrarAsegurado(asegurado);
+        
+        System.out.println("\nSe ha eliminado el asegurado correctamente");
+    }
+    
+    public void borrarAsegurado(Asegurado asegurado){
+        System.out.println("");
+        try{
+            iniciarOperacion();
+            sesion.delete(asegurado);
+            tx.commit();
+            System.out.println("Asegurado " + asegurado.getId() + " eliminado.");
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }
+    }
+    
+    public void generarXML_Asegurados(){
+        
     }
 }

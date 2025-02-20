@@ -35,8 +35,8 @@ public class Utils {
         
         while(true){
             System.out.println("\n" + pregunta);
-            System.out.println("Opcion 1: Confirmar");
-            System.out.println("Opcion 2: Cancelar");
+            System.out.println(" - Opcion 1: Confirmar");
+            System.out.println(" - Opcion 2: Cancelar");
             String respuesta = scan.nextLine();
             switch(respuesta){
                 case "1":

@@ -220,4 +220,33 @@ public class PolizaDAO {
         
     }
     
+    public void borrarPolizasAsegurado(Asegurado asegurado){
+        List<Poliza> listadoPolizas = recogerPolizasDeUsuario(asegurado);
+        for(Poliza pol: listadoPolizas){
+            borrarPolizaUnica(pol);
+        }
+    }
+    
+    public void borrarPolizaUnica(Poliza poliza){
+        System.out.println("");
+        
+        // Borrar detalle de póliza
+        DetallePolizaDAO detalleDAO = new DetallePolizaDAO();
+        DetallePoliza detalle = detalleDAO.buscarDetallePoliza(poliza);
+        detalleDAO.borrarDetallePoliza(detalle);
+        
+        // Borrar póliza
+        try{
+            iniciarOperacion();
+            sesion.delete(poliza);
+            tx.commit();
+            System.out.println("Póliza " + poliza.getReferencia() + " eliminada.");
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }
+    }
+    
 }
