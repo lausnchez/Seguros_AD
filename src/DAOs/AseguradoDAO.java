@@ -14,12 +14,14 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import seguroshibernate.GestorDOM;
 import seguroshibernate.HibernateUtil;
 import seguroshibernate.Utils;
 
@@ -199,6 +201,32 @@ public class AseguradoDAO {
     }
     
     public void generarXML_Asegurados(){
+        GestorDOM gDom = new GestorDOM();
+        List<Asegurado> listadoAsegurados = recogerAsegurados();
         
+        gDom.inicializarDocumento();
+        for(Asegurado as: listadoAsegurados){
+            gDom.generarAsegurado(as);
+        }
+        gDom.guardarDocumento();
+        
+    }
+    
+    public List<Asegurado> recogerAsegurados(){
+        List<Asegurado> listadoAsegurados = null;
+        try{
+            iniciarOperacion();
+            String query = "FROM Asegurado a";
+            listadoAsegurados = sesion.createQuery(query).list();
+            if(listadoAsegurados == null){
+                System.out.println("\nNo se han encontrado pólizas.");
+            }
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }  
+        return listadoAsegurados;
     }
 }

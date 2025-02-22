@@ -49,6 +49,7 @@ public class SegurosHibernate {
             System.out.println("2. Contratar póliza");
             System.out.println("3. Mostrar datos de un asegurado");
             System.out.println("4. Borrar asegurado");
+            System.out.println("5. Generar xml\n");
             System.out.println("0. Salir");
             System.out.print("\nOpcion: ");
 
