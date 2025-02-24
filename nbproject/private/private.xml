@@ -14,10 +14,12 @@
         <group>
             <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/DAOs/DetallePolizaDAO.java</file>
             <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/seguroshibernate/SegurosHibernate.java</file>
-            <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/POJOs/Subvencion.java</file>
+            <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/seguroshibernate/GestorDOM.java</file>
             <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/POJOs/DetallePoliza.java</file>
             <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/DAOs/SubvencionDAO.java</file>
             <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/DAOs/AseguradoDAO.java</file>
+            <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/seguroshibernate/Utils.java</file>
+            <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/hibernate.cfg.xml</file>
             <file>file:/C:/Users/laura.sanchez/Desktop/Seguros_AD/src/DAOs/PolizaDAO.java</file>
         </group>
     </open-files>

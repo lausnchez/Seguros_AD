@@ -85,7 +85,7 @@ public class SegurosHibernate {
                     encontrarAsegurado();
                     break;
                 case 4:
-                    borrarAsegurado();
+                    borrarDatosDeAsegurado();
                     break;
                 case 5:
                     AseguradoDAO asDAO = new AseguradoDAO();
@@ -213,13 +213,13 @@ public class SegurosHibernate {
         return aseguradoEncontrado;
     }  
     
-    public static void borrarAsegurado(){
+    public static void borrarDatosDeAsegurado(){
         AseguradoDAO aseguradoDAO = new AseguradoDAO();
         
         Asegurado asegurado = encontrarAsegurado();
         Boolean confirmacion = Utils.pedirConfirmacion("¿Desea borrar al usuario?");
         if(confirmacion){
-            aseguradoDAO.borrarDatosAsegurado(asegurado);
+            aseguradoDAO.borrarSubvencionesPolizasYAsegurado(asegurado);
         }      
     }
 }

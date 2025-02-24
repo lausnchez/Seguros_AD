@@ -222,8 +222,22 @@ public class PolizaDAO {
     
     public void borrarPolizasAsegurado(Asegurado asegurado){
         List<Poliza> listadoPolizas = recogerPolizasDeUsuario(asegurado);
-        for(Poliza pol: listadoPolizas){
-            borrarPolizaUnica(pol);
+        try{
+            iniciarOperacion();
+            for(Poliza pol: listadoPolizas){
+                DetallePolizaDAO detalleDAO = new DetallePolizaDAO();
+                DetallePoliza detalle = detalleDAO.buscarDetallePoliza(pol);
+                detalleDAO.borrarDetallePoliza(detalle);
+
+                sesion.delete(pol);
+                tx.commit();
+                System.out.println("Póliza " + pol.getReferencia() + " eliminada.");
+            }
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
         }
     }
     

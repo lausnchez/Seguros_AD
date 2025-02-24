@@ -183,9 +183,19 @@ public class SubvencionDAO {
     }
     
     public void borrarSubvenciones(Asegurado asegurado){
-        List<Subvencion> subvencionesUsuario = recogerSubvencionesDeUsuario(asegurado);
-        for(Subvencion sub: subvencionesUsuario){
-            borrarUnicaSubvencion(sub);
+        List<Subvencion> subvencionesUsuario = recogerSubvencionesDeUsuario(asegurado);  
+        try{
+            iniciarOperacion();
+            for(Subvencion sub: subvencionesUsuario){
+                sesion.delete(sub);
+                tx.commit();
+                System.out.println("Subvencion " + sub.getId() + " eliminada.");
+            }
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
         }
     }
     

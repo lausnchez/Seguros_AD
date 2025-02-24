@@ -127,10 +127,17 @@ public class AseguradoDAO {
      * @param id
      * @return Asegurado / null;
      */
-    public Asegurado encontrarAsegurado(int id){
-        iniciarOperacion();
+    public Asegurado encontrarAsegurado(int id){       
         Asegurado aseguradoEncontrado = null;
-        aseguradoEncontrado = (Asegurado)sesion.createQuery("FROM Asegurado a WHERE id=:param").setInteger("param", id).uniqueResult();
+        try{
+            iniciarOperacion();
+            aseguradoEncontrado = (Asegurado)sesion.createQuery("FROM Asegurado a WHERE id=:param").setInteger("param", id).uniqueResult();
+        }catch(HibernateException he){
+            manejarExcepcion(he);
+            throw he;
+        }finally{
+            sesion.close();
+        }
         return aseguradoEncontrado;
     }
     
@@ -171,7 +178,7 @@ public class AseguradoDAO {
         System.out.println("Fecha de nacimiento: " + asegurado.getFechaNacimiento());
     }
     
-    public void borrarDatosAsegurado(Asegurado asegurado){
+    public void borrarSubvencionesPolizasYAsegurado(Asegurado asegurado){
         SubvencionDAO subvencionesDAO = new SubvencionDAO();
         PolizaDAO polizaDAO = new PolizaDAO();
         
@@ -180,9 +187,7 @@ public class AseguradoDAO {
         // Borrar polizas
         polizaDAO.borrarPolizasAsegurado(asegurado);
         // Borrar asegurado
-        //borrarAsegurado(asegurado);
-        
-        System.out.println("\nSe ha eliminado el asegurado correctamente");
+        borrarAsegurado(asegurado);
     }
     
     public void borrarAsegurado(Asegurado asegurado){
@@ -191,7 +196,11 @@ public class AseguradoDAO {
             iniciarOperacion();
             sesion.delete(asegurado);
             tx.commit();
-            System.out.println("Asegurado " + asegurado.getId() + " eliminado.");
+            
+            if(encontrarAsegurado(asegurado.getId()) == null){
+                System.out.println("Asegurado " + asegurado.getId() + " eliminado.");
+            }else System.out.println("No se ha podido borrar el asegurado.");
+            
         }catch(HibernateException he){
             manejarExcepcion(he);
             throw he;
@@ -209,6 +218,7 @@ public class AseguradoDAO {
             gDom.generarAsegurado(as);
         }
         gDom.guardarDocumento();
+        System.out.println("Se ha generado el archivo .xml con éxito.");
         
     }
     

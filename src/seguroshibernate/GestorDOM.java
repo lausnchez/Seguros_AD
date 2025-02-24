@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * @author Laura Sánchez
  */
 public class GestorDOM {
-    private static String direccionDoc = "./asegurados.xml";
+    private static String direccionDoc = "./xml/asegurados.xml";
     private static DocumentBuilder dBuilder;
     private static Document doc;
     
@@ -88,6 +88,7 @@ public class GestorDOM {
     }
     
     public void generarAsegurado(Asegurado asegurado){
+
         // Elemento principal
         Element elementoAsegurado = doc.createElement("asegurado");
         elementoAsegurado.setAttribute("id", asegurado.getId().toString());
