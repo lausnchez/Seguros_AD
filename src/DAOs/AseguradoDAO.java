@@ -77,16 +77,7 @@ public class AseguradoDAO {
                 datos[2] = linea.substring(29,79).trim();             // apellido1
                 datos[3] = linea.substring(79,129).trim();            //apellido2
                 datos[4] = linea.substring(129).trim();               //fecha
-                
-                
-                /*
-                System.out.println("dni:" + datos[0]);
-                System.out.println("nombre:" + datos[1]);
-                System.out.println("apellido1:" + datos[2]);
-                System.out.println("apellido2:" + datos[3]);
-                System.out.println("fecha:" + datos[4]);
-                */
-                
+
                 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
                 Date fecha = format.parse(datos[4]);
                 
@@ -196,7 +187,6 @@ public class AseguradoDAO {
             iniciarOperacion();
             sesion.delete(asegurado);
             tx.commit();
-            
             if(encontrarAsegurado(asegurado.getId()) == null){
                 System.out.println("Asegurado " + asegurado.getId() + " eliminado.");
             }else System.out.println("No se ha podido borrar el asegurado.");
@@ -205,7 +195,10 @@ public class AseguradoDAO {
             manejarExcepcion(he);
             throw he;
         }finally{
-            sesion.close();
+            try{
+                sesion.close();
+            }catch(Exception e){}
+            
         }
     }
     

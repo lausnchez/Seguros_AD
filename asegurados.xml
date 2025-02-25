@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<asegurados>
+    <asegurado id="2">
+        <dni>75224694C</dni>
+        <nombre>JOSE</nombre>
+        <apellido1>MARTINEZ</apellido1>
+        <apellido2>GOMEZ</apellido2>
+        <fecha>1969-12-31</fecha>
+    </asegurado>
+    <asegurado id="3">
+        <dni>42842936P</dni>
+        <nombre>JUAN</nombre>
+        <apellido1>RUIZ</apellido1>
+        <apellido2>ALONSO</apellido2>
+        <fecha>1980-01-06</fecha>
+    </asegurado>
+    <asegurado id="4">
+        <dni>18864318V</dni>
+        <nombre>LUIS</nombre>
+        <apellido1>HURTADO</apellido1>
+        <apellido2>NADAL</apellido2>
+        <fecha>1979-06-20</fecha>
+    </asegurado>
+    <asegurado id="5">
+        <dni>40041016V</dni>
+        <nombre>MARIA</nombre>
+        <apellido1>CALVO</apellido1>
+        <apellido2>TORRES</apellido2>
+        <fecha>1947-05-21</fecha>
+        <subvencion asegurado="5" linea="401">
+            <importe>10</importe>
+            <asunto>SUBVENCI�N AGRICULTORES MAYORES DE 65 A�OS</asunto>
+        </subvencion>
+    </asegurado>
+    <asegurado id="6">
+        <dni>75437765L</dni>
+        <nombre>RAMON</nombre>
+        <apellido1>JIMENEZ</apellido1>
+        <apellido2>CASTILLO</apellido2>
+        <fecha>1964-08-25</fecha>
+    </asegurado>
+    <asegurado id="7">
+        <dni>70861873T</dni>
+        <nombre>AARON</nombre>
+        <apellido1>HERRERO</apellido1>
+        <apellido2>CABALLERO</apellido2>
+        <fecha>1971-10-12</fecha>
+    </asegurado>
+    <asegurado id="8">
+        <dni>53262182R</dni>
+        <nombre>ABEL</nombre>
+        <apellido1>DELGADO</apellido1>
+        <apellido2>SERRANO</apellido2>
+        <fecha>1966-12-11</fecha>
+    </asegurado>
+    <asegurado id="9">
+        <dni>18863017G</dni>
+        <nombre>RAQUEL</nombre>
+        <apellido1>SALVADOR</apellido1>
+        <apellido2>CATALAN</apellido2>
+        <fecha>1988-01-26</fecha>
+        <subvencion asegurado="9" linea="301">
+            <importe>15</importe>
+            <asunto>SUBVENCI�N J�VENES AGRICULTORES</asunto>
+        </subvencion>
+    </asegurado>
+    <asegurado id="10">
+        <dni>28037916L</dni>
+        <nombre>SANTIAGO</nombre>
+        <apellido1>FERNANDEZ</apellido1>
+        <apellido2>GUILLEN</apellido2>
+        <fecha>1953-11-25</fecha>
+    </asegurado>
+</asegurados>

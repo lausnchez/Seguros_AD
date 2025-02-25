@@ -100,9 +100,9 @@ public class PolizaDAO {
                valido = false; 
                 System.out.println("Debe insertar un número con decimales (usando una coma).");
             }else{
-                if(Float.parseFloat(peticion) < 0){
+                if(Float.parseFloat(peticion) < 0 || Float.parseFloat(peticion) > 99999999){
                     valido = false;
-                    System.out.println("Debe insertar un número positivo.");
+                    System.out.println("Debe insertar un número positivo/válido.");
                 }
             }
         }while(!valido);
